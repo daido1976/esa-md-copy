@@ -1,5 +1,6 @@
 /**
  * @param {Node} ul or ol 選択範囲の unordered list もしくは orderd list
+ * @example <ul><li>GW 前に...<ul><li>HTTP の状態管理...<ul><li>を調べてたら...</li></ul></li><li>Ajax リクエスト... <ul><li>を調べてたら...</li></ul></li><li>で、ようやく XSS や CSRF など...</li></ul></li><li>まだまだ途中ですが GW にインプットできた分...<img class="emoji" title=":muscle:" alt=":muscle:" src="https://assets...png"></li></ul>
  * @return {string} Markdown っぽくなった文字列
  */
 const parseList = (listNode, nestedCount = 0) => {
@@ -13,9 +14,14 @@ const parseList = (listNode, nestedCount = 0) => {
   const bulletListMaker = "•";
   let ary = [];
 
-  // listNode(ul or ol) の children として listItem(li) を想定している
+  // listItem は以下のような li 要素の Node を想定している
+  // example1: <li>GW 前に...<ul><li>HTTP の状態管理...<ul><li>を調べてたら...</li></ul></li>
+  // example2: <li>まだまだ途中ですが GW にインプットできた分...<img class="emoji" title=":muscle:" alt=":muscle:" src="https://assets...png"></li>
   for (const listItem of listNode.children) {
     let str = "";
+
+    // ParentNode.children だとテキストノードにアクセスできないので、Node.childNodes を使っている
+    // see. https://developer.mozilla.org/ja/docs/Web/API/Node/childNodes
     for (let node of listItem.childNodes) {
       switch (node.nodeName) {
         // ネストしたリストであれば、 parseList() を再帰的に呼ぶ
