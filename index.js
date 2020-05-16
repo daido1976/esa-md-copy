@@ -2,14 +2,14 @@
  * @param {Node} ul or ol 選択範囲の unordered list もしくは orderd list
  * @return {string} Markdown っぽくなった文字列
  */
-const parseList = (listNode) => {
+const parseList = (listNode, nestedCount = 0) => {
   // 選択範囲が ul or ol でない時に for 文で回そうとするとエラーになるので、その場合は return する
   validListNodeNames = ["UL", "OL"];
   if (!validListNodeNames.includes(listNode.nodeName)) {
     return;
   }
 
-  const indent = `${"\b".repeat(4)}`;
+  const defaultIndent = "\b".repeat(4);
   const bulletListMaker = "•";
   let ary = [];
 
@@ -20,7 +20,7 @@ const parseList = (listNode) => {
       switch (node.nodeName) {
         // ネストしたリストであれば、 parseList() を再帰的に呼ぶ
         case "UL":
-          str += `\n${indent}${parseList(node)}`;
+          str += `\n${parseList(node, nestedCount + 1)}`;
           break;
         case "IMG":
           str += node.title;
@@ -39,7 +39,9 @@ const parseList = (listNode) => {
           break;
       }
     }
-    ary.push(`${bulletListMaker} ${str}`);
+    // nestedCount が 0 であれば、indent はつかない
+    const indent = defaultIndent.repeat(nestedCount);
+    ary.push(`${indent}${bulletListMaker} ${str}`);
   }
   return ary.join("\n");
 };
