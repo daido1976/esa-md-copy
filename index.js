@@ -23,6 +23,9 @@ const parseList = (listNode) => {
         case "IMG":
           str += node.title;
           break;
+        case "A":
+          str += node.innerText;
+          break;
         case "#text":
           if (node.nodeValue === "\n") {
             break;
