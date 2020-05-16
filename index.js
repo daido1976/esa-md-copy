@@ -1,20 +1,22 @@
 /**
- * @param {Node} ul 選択範囲の unordered list
+ * @param {Node} ul or ol 選択範囲の unordered list もしくは orderd list
  * @return {string} Markdown っぽくなった文字列
  */
 const parseList = (listNode) => {
+  // 選択範囲が ul or ol でない時に for 文で回そうとするとエラーになるので、その場合は return する
+  validListNodeNames = ["UL", "OL"];
+  if (!validListNodeNames.includes(listNode.nodeName)) {
+    return;
+  }
+
   const indent = `${"\b".repeat(4)}`;
   const bulletListMaker = "•";
   let ary = [];
 
-  // 選択範囲が ul でない時に for 文で回そうとするとエラーになるので、その場合は return する
-  if (listNode.nodeName !== "UL") {
-    return;
-  }
-
-  for (const child of listNode.children) {
+  // listNode(ul or ol) の children として listItem(li) を想定している
+  for (const listItem of listNode.children) {
     let str = "";
-    for (let node of child.childNodes) {
+    for (let node of listItem.childNodes) {
       switch (node.nodeName) {
         // ネストしたリストであれば、 parseList() を再帰的に呼ぶ
         case "UL":
