@@ -43,8 +43,13 @@ const logSelection = () => {
   // selectionchange イベントが短い時間に何度も発火してしまうので、
   // 2秒待って前回の選択範囲と比較することで一度だけ出力するようにしている
   window.setTimeout(() => {
-    const selectedNode = document.getSelection()?.getRangeAt(0)
-      .commonAncestorContainer;
+    const selection = document.getSelection();
+
+    if (selection.rangeCount == null || selection.rangeCount === 0) {
+      return;
+    }
+
+    const selectedNode = selection.getRangeAt(0).commonAncestorContainer;
 
     if (prevSelectedNode === selectedNode) {
       return;
