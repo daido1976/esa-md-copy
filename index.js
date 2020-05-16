@@ -6,6 +6,9 @@ let prevSelectedNode = null;
  */
 const parseList = (listNode) => {
   let ary = [];
+  if (listNode.nodeName !== "UL") {
+    return;
+  }
   for (const child of listNode.children) {
     let str = "";
     for (let node of child.childNodes) {
