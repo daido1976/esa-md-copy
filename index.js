@@ -1,39 +1,48 @@
 /**
- * @param {Node} ul 選択範囲の unordered list
+ * @param {Node} ul or ol 選択範囲の unordered list もしくは orderd list
  * @return {string} Markdown っぽくなった文字列
  */
-const parseList = (listNode) => {
-  const indent = `${"\b".repeat(4)}`;
-  const bulletListMaker = "•";
-  let ary = [];
-
-  // 選択範囲が ul でない時に for 文で回そうとするとエラーになるので、その場合は return する
-  if (listNode.nodeName !== "UL") {
+const parseList = (listNode, nestedCount = 0) => {
+  // 選択範囲が ul or ol でない時に for 文で回そうとするとエラーになるので、その場合は return する
+  validListNodeNames = ["UL", "OL"];
+  if (!validListNodeNames.includes(listNode.nodeName)) {
     return;
   }
 
-  for (const child of listNode.children) {
+  const defaultIndent = "\b".repeat(4);
+  const bulletListMaker = "•";
+  let ary = [];
+
+  // listNode(ul or ol) の children として listItem(li) を想定している
+  for (const listItem of listNode.children) {
     let str = "";
-    for (let node of child.childNodes) {
+    for (let node of listItem.childNodes) {
       switch (node.nodeName) {
         // ネストしたリストであれば、 parseList() を再帰的に呼ぶ
         case "UL":
-          str += `\n${indent}${parseList(node)}`;
+          str += `\n${parseList(node, nestedCount + 1)}`;
           break;
         case "IMG":
           str += node.title;
+          break;
+        case "A":
+        case "CODE":
+          str += node.innerText;
           break;
         case "#text":
           if (node.nodeValue === "\n") {
             break;
           }
-          str += node.nodeValue;
+          // ネストしたリスト内に複数の要素があると text の末尾に改行("\n")が余分についてしまうので、trim() している
+          str += node.nodeValue.trim();
           break;
         default:
           break;
       }
     }
-    ary.push(`${bulletListMaker} ${str}`);
+    // nestedCount が 0 であれば、indent はつかない
+    const indent = defaultIndent.repeat(nestedCount);
+    ary.push(`${indent}${bulletListMaker} ${str}`);
   }
   return ary.join("\n");
 };
