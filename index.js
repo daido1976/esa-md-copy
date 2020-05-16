@@ -1,7 +1,14 @@
+let prevContainer = null;
 const logSelection = () => {
-  const container = document.getSelection().getRangeAt(0)
-    .commonAncestorContainer;
-  console.log(container);
+  window.setTimeout(() => {
+    const container = document.getSelection()?.getRangeAt(0)
+      .commonAncestorContainer;
+    if (prevContainer === container) {
+      return;
+    }
+    prevContainer = container;
+    console.log(container);
+  }, 2000);
 };
 
 document.addEventListener("selectionchange", logSelection);
