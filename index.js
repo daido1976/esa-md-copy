@@ -33,7 +33,8 @@ const parseList = (listNode, nestedCount = 0) => {
           if (node.nodeValue === "\n") {
             break;
           }
-          str += node.nodeValue;
+          // ネストしたリスト内に複数の要素があると text の末尾に改行("\n")が余分についてしまうので、trim() している
+          str += node.nodeValue.trim();
           break;
         default:
           break;
