@@ -1,11 +1,18 @@
 let prevSelectedNode = null;
 
+/**
+ * @param {Node} ul or ol
+ * @return {string}
+ */
 const parseList = (listNode) => {
   let ary = [];
   for (const child of listNode.children) {
     let str = "";
     for (let node of child.childNodes) {
       switch (node.nodeName) {
+        case "UL":
+          str += `\n    ${parseList(node)}`;
+          break;
         case "IMG":
           str += node.title;
           break;
