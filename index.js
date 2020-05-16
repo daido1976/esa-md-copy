@@ -26,6 +26,7 @@ const parseList = (listNode) => {
           str += node.title;
           break;
         case "A":
+        case "CODE":
           str += node.innerText;
           break;
         case "#text":
