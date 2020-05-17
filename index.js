@@ -22,7 +22,10 @@ const parseList = (listNode, nestedCount = 0) => {
 
     // ParentNode.children だとテキストノードにアクセスできないので、Node.childNodes を使っている
     // see. https://developer.mozilla.org/ja/docs/Web/API/Node/childNodes
-    for (let node of listItem.childNodes) {
+    // また、childNodes の返り値である NodeList は Array でないため forEach で回せない。（children の返り値である HTMLCollection も同様）
+    // そのため for...of を使っている。
+    // see. https://developer.mozilla.org/ja/docs/Web/API/NodeList#Example
+    for (const node of listItem.childNodes) {
       switch (node.nodeName) {
         // ネストしたリストであれば、 parseList() を再帰的に呼ぶ
         case "UL":
