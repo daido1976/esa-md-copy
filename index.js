@@ -11,7 +11,7 @@ const parseList = (listNode, nestedCount = 0) => {
     return;
   }
 
-  const defaultIndent = "\b".repeat(8);
+  const defaultIndent = "\t".repeat(1);
   const bulletListMaker = "•";
   let ary = [];
 
@@ -33,7 +33,7 @@ const parseList = (listNode, nestedCount = 0) => {
           str += `\n${parseList(node, nestedCount + 1)}`;
           break;
         case "IMG":
-          str += node.title;
+          str += ` ${node.title} `;
           break;
         case "A":
         case "CODE":
