@@ -11,7 +11,7 @@ const parseList = (listNode, nestedCount = 0) => {
     return;
   }
 
-  const defaultIndent = "\b".repeat(4);
+  const defaultIndent = "\b".repeat(8);
   const bulletListMaker = "•";
   let ary = [];
 
