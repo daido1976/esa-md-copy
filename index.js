@@ -33,7 +33,7 @@ const parseList = (listNode, nestedCount = 0) => {
           str += `\n${parseList(node, nestedCount + 1)}`;
           break;
         case "IMG":
-          str += ` ${node.title} `;
+          str += ` ${node.title.replace("@", "")} `;
           break;
         case "A":
         case "CODE":
